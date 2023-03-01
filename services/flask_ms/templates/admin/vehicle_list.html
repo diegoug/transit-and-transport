@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehicles{% endblock %}
+
+{% block content %}
+  <h1>Vehicles</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>PLate</th>
+        <th>Brand</th>
+        <th>Color</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vehicle in vehicles %}
+        <tr>
+          <td>{{ vehicle.license_plate }}</td>
+          <td>{{ vehicle.brand }}</td>
+          <td>{{ vehicle.color }}</td>
+          <td>
+            <a href="{{ url_for('admin.edit_vehicle', id=vehicle.id) }}">Edit</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('admin.new_vehicle') }}">New Vehicle</a>
+{% endblock %}

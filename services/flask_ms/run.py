@@ -1,7 +1,11 @@
-from flask import Flask
+from app import create_app
 
-app = Flask(__name__)
+# Selecciona la configuración deseada (p.ej. 'development')
+config_name = 'development'
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
+# Crea la instancia de la aplicación
+app = create_app(config_name)
+
+if __name__ == '__main__':
+    # Inicia la aplicación
+    app.run()

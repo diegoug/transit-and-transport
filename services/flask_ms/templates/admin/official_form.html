@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% if official %}
+<script>
+    // Obtener referencia al botón de eliminación
+    const deleteButton = document.getElementById('delete-button');
+    // Agregar evento onclick al botón de eliminación
+    deleteButton.onclick = function() {
+      // Mostrar mensaje de confirmación al usuario
+      if (confirm('¿Estás seguro de que quieres eliminar este oficial?')) {
+        // Enviar petición DELETE asíncrona al servidor
+        fetch("{{ url_for('admin.delete_official', id=official.id) }}", { method: 'DELETE' })
+          .then(function(response) {
+            // Redirigir al usuario a la página de lista de oficiales después de recibir la respuesta
+            window.location.href = "{{ url_for('admin.official_list') }}";
+          });
+      }
+    };
+  </script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>Oficial</h1>
+  <hr>
+
+  {% if official %}
+    <h3>Editar oficial</h3>
+    <form method="POST" action="{{ url_for('admin.edit_official', id=official.id) }}">
+  {% else %}
+    <h3>Crear oficial</h3>
+    <form method="POST" action="{{ url_for('admin.new_official') }}">
+  {% endif %}
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.name.label }} {{ form.name(class="form-control") }}
+    </div>
+    <div class="form-group">
+      {{ form.identification_number.label }} {{ form.identification_number(class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('admin.official_list') }}" class="btn btn-secondary">Cancelar</a>
+    {% if official %}
+    <button id="delete-button" class="btn btn-danger">Eliminar</button>
+    {% endif %}
+  </form>
+{% endblock %}

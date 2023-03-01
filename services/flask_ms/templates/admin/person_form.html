@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+{% if person %}
+<script>
+    // Obtener referencia al botón de eliminación
+    const deleteButton = document.getElementById('delete-button');
+    // Agregar evento onclick al botón de eliminación
+    deleteButton.onclick = function() {
+      // Mostrar mensaje de confirmación al usuario
+      if (confirm('Are you sure you want to delete this person?')) {
+        // Enviar petición DELETE asíncrona al servidor
+        fetch("{{ url_for('admin.delete_person', id=person.id) }}", { method: 'DELETE' })
+          .then(function(response) {
+            // Redirigir al usuario a la página de lista de usuarios después de recibir la respuesta
+            window.location.href = "{{ url_for('admin.person_list') }}";
+          });
+      }
+    };
+  </script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+  <h1>Person</h1>
+  <hr>
+
+  {% if person %}
+    <h3>Edit Person</h3>
+  {% else %}
+    <h3>Create Person</h3>
+  {% endif %}
+
+  <form method="POST" action="{% if person %}{{ url_for('admin.edit_person', id=person.id) }}{% else %}{{ url_for('admin.new_person') }}{% endif %}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.name.label }} {{ form.name() }}
+    </div>
+    <div class="form-group">
+      {{ form.email.label }} {{ form.email() }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{{ url_for('admin.person_list') }}" class="btn btn-secondary">Cancel</a>
+    {% if person %}
+    <button id="delete-button" class="btn btn-danger">Delete</button>
+    {% endif %}
+  </form>
+{% endblock %}
